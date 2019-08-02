@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business;
 
-use Spryker\Zed\Kernel\Business\AbstractFacade;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageFacade as SprykerCategoryStorageFacade;
 
 /**

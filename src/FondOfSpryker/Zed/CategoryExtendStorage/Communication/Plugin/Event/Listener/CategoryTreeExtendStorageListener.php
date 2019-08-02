@@ -4,9 +4,8 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Lis
 
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\Category\Dependency\CategoryEvents;
-use Spryker\Zed\PropelOrm\Business\Transaction\DatabaseTransactionHandlerTrait;
-
 use Spryker\Zed\CategoryStorage\Communication\Plugin\Event\Listener\CategoryTreeStorageListener as SprykerCategoryTreeStorageListener;
+use Spryker\Zed\PropelOrm\Business\Transaction\DatabaseTransactionHandlerTrait;
 
 /**
  * @method \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface getQueryContainer()

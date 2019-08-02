@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander;
+namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander;
 
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;

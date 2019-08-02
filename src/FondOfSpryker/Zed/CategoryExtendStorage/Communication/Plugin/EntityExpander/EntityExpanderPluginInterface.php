@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\EntityExpander;
+namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\EntityExpander;
 
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
 

@@ -5,8 +5,6 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Sub
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryNodeExtendStorageListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryNodeStorageCategoryStorageListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryTreeExtendStorageListener;
-use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryTreeStoreStorageListener;
-use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryNodeStoreStorageListener;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\Category\Dependency\CategoryEvents;
 use Spryker\Zed\CategoryStorage\Communication\Plugin\Event\Subscriber\CategoryStorageEventSubscriber as SprykerCategoryStorageEventSubscriber;
@@ -69,7 +67,6 @@ class CategoryExtendStorageEventSubscriber extends SprykerCategoryStorageEventSu
      * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
      *
      * @return void
-     *
      */
     protected function addCategoryNodePublishListener(EventCollectionInterface $eventCollection)
     {
