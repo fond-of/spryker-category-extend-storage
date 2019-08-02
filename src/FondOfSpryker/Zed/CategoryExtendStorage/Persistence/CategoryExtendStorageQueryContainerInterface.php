@@ -1,0 +1,9 @@
+<?php
+
+namespace FondOfSpryker\Zed\CategoryExtendStorage\Persistence;
+
+use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface as SprykerCategoryStorageQueryContainerInterface;
+
+interface CategoryExtendStorageQueryContainerInterface extends SprykerCategoryStorageQueryContainerInterface
+{
+}

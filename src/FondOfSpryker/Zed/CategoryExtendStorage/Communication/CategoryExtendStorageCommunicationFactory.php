@@ -1,0 +1,10 @@
+<?php
+
+namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication;
+
+use Spryker\Zed\CategoryStorage\Communication\CategoryStorageCommunicationFactory as SprykerCategoryStorageCommunicationFactory;
+
+class CategoryExtendStorageCommunicationFactory extends SprykerCategoryStorageCommunicationFactory
+{
+
+}

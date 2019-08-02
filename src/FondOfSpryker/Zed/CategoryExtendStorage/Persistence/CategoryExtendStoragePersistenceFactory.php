@@ -1,0 +1,9 @@
+<?php
+
+namespace FondOfSpryker\Zed\CategoryExtendStorage\Persistence;
+
+use Spryker\Zed\CategoryStorage\Persistence\CategoryStoragePersistenceFactory as SprykerCategoryStoragePersistenceFactory;
+
+class CategoryExtendStoragePersistenceFactory extends SprykerCategoryStoragePersistenceFactory
+{
+}
