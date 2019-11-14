@@ -2,130 +2,63 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
-use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
-use Orm\Zed\Category\Persistence\SpyCategoryNode;
-use Orm\Zed\Category\Persistence\SpyCategoryNodeQuery;
-use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
-use Orm\Zed\Store\Persistence\SpyStoreQuery;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
+use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\EntityExpander\EntityExpanderPluginInterface[]
+     * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
      */
-    protected $entityExpanderPlugins;
+    private $storeFacade;
 
-    /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface
-     */
-    protected $storageMapperExpanderPlugins;
-
-    /**
-     * CategoryNodeStorage constructor.
-     *
-     * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
-     * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
-     * @param \Spryker\Shared\Kernel\Store $store
-     * @param $isSendingToQueue
-     * @param array $entityExpanderPlugins
-     * @param array $storageMapperExpanderPlugins
-     */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
         $isSendingToQueue,
-        array $entityExpanderPlugins,
-        array $storageMapperExpanderPlugins
+        StoreFacadeInterface $storeFacade
     ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);
-
-        $this->entityExpanderPlugins = $entityExpanderPlugins;
-        $this->storageMapperExpanderPlugins = $storageMapperExpanderPlugins;
+        $this->storeFacade = $storeFacade;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param string $localeName
-     * @param \Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage|null $spyCategoryNodeStorageEntity
-     *
-     * @throws
-     *
      * @return void
      */
-    protected function storeDataSet(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, $localeName, ?SpyCategoryNodeStorage $spyCategoryNodeStorageEntity = null)
+    public function publish(array $categoryNodeIds)
     {
-        $categoryNodeStorageTransfer->getNodeId();
+        $categoryNodeIds = $this->reduceCategoryNodeIdsByStore($categoryNodeIds);
 
-        if ($spyCategoryNodeStorageEntity === null) {
-            $spyCategoryNodeStorageEntity = new SpyCategoryNodeStorage();
+        $categoryNodes = $this->getCategoryNodes($categoryNodeIds);
+        $spyCategoryNodeStorageEntities = $this->findCategoryNodeStorageEntitiesByCategoryNodeIds($categoryNodeIds);
+
+        if (!$categoryNodes) {
+            $this->deleteStorageData($spyCategoryNodeStorageEntities);
         }
 
-        if (!$categoryNodeStorageTransfer->getIsActive()) {
-            if (!$spyCategoryNodeStorageEntity->isNew()) {
-                $spyCategoryNodeStorageEntity->delete();
-            }
-
-            return;
-        }
-
-        $categoryNodeNodeData = $this->utilSanitize->arrayFilterRecursive($categoryNodeStorageTransfer->toArray());
-        $spyCategoryNodeStorageEntity->setFkCategoryNode($categoryNodeStorageTransfer->getNodeId());
-        $spyCategoryNodeStorageEntity->setData($categoryNodeNodeData);
-        $spyCategoryNodeStorageEntity->setLocale($localeName);
-        $spyCategoryNodeStorageEntity->setIsSendingToQueue($this->isSendingToQueue);
-
-        foreach ($this->entityExpanderPlugins as $plugin) {
-            $plugin->expand($spyCategoryNodeStorageEntity);
-        }
-
-        $spyCategoryNodeStorageEntity->save();
+        $this->storeData($categoryNodes, $spyCategoryNodeStorageEntities);
     }
 
     /**
-     * @param array $categoryNodes
-     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
-     * @param bool $includeChildren
-     * @param bool $includeParents
-     *
-     * @throws
-     *
-     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
+     * @return void
      */
-    protected function mapToCategoryNodeStorageTransfer(array $categoryNodes, SpyCategoryNode $categoryNode, $includeChildren = true, $includeParents = true): CategoryNodeStorageTransfer
+    public function unpublish(array $categoryNodeIds)
     {
-        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
+        $categoryNodeIds = $this->reduceCategoryNodeIdsByStore($categoryNodeIds);
 
-        foreach ($this->storageMapperExpanderPlugins as $plugin) {
-            $plugin->expand($categoryNodeStorageTransfer, $categoryNode);
-        }
-
-        return $categoryNodeStorageTransfer;
+        parent::unpublish($categoryNodeIds);
     }
 
     /**
-     * Retreieve Store Name
-     *
-     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     *
-     * @throws
-     *
-     * @return string
+     * @return void
      */
-    protected function getStoreName(CategoryNodeStorageTransfer $categoryNodeStorageTransfer)
+    protected function reduceCategoryNodeIdsByStore(array $categoryNodeIds): array
     {
-        $categoryNodeEntity = SpyCategoryNodeQuery::create()
-            ->filterByIdCategoryNode($categoryNodeStorageTransfer->getNodeId())
-            ->findOne();
-
-        $storeEntity = SpyStoreQuery::create()
-            ->filterByIdStore($categoryNodeEntity->getFkStore())
-            ->findOne();
-
-        return $storeEntity->getName();
+        $store = $this->storeFacade->getCurrentStore();
+        $this->queryContainer->queryCategoryNodeByIds($categoryNodeIds)->filterByFkStore($store->getIdStore());
     }
 }
