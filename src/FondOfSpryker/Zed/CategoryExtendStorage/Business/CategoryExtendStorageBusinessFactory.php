@@ -3,8 +3,10 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business;
 
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage;
+use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
 use Spryker\Shared\Kernel\Store;
+use Spryker\Zed\Category\Business\Model\CategoryTree\CategoryTree;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
 use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
@@ -17,9 +19,23 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     /**
      * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage|\Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
      */
-    public function createCategoryNodeStorage()
+    public function createCategoryNodeStorage(): CategoryNodeExtendStorage
     {
         return new CategoryNodeExtendStorage(
+            $this->getQueryContainer(),
+            $this->getUtilSanitizeService(),
+            $this->getStore(),
+            $this->getConfig()->isSendingToQueue(),
+            $this->getStoreFacade()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage
+     */
+    public function createCategoryTreeStorage(): CategoryTreeExtendStorage
+    {
+        return new CategoryTreeExtendStorage(
             $this->getQueryContainer(),
             $this->getUtilSanitizeService(),
             $this->getStore(),

@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
+use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
+use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
@@ -15,6 +17,13 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      */
     private $storeFacade;
 
+    /**
+     * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
+     * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
+     * @param \Spryker\Shared\Kernel\Store $store
+     * @param $isSendingToQueue
+     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
+     */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
@@ -29,7 +38,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     /**
      * @return void
      */
-    public function publish(array $categoryNodeIds)
+    public function publish(array $categoryNodeIds): void
     {
         $categoryNodeIds = $this->reduceCategoryNodeIdsByStore($categoryNodeIds);
 
@@ -46,7 +55,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     /**
      * @return void
      */
-    public function unpublish(array $categoryNodeIds)
+    public function unpublish(array $categoryNodeIds): void
     {
         $categoryNodeIds = $this->reduceCategoryNodeIdsByStore($categoryNodeIds);
 
@@ -58,7 +67,46 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      */
     protected function reduceCategoryNodeIdsByStore(array $categoryNodeIds): array
     {
-        $store = $this->storeFacade->getCurrentStore();
-        $this->queryContainer->queryCategoryNodeByIds($categoryNodeIds)->filterByFkStore($store->getIdStore());
+        $currentStore = $this->storeFacade->getCurrentStore();
+        $categoryNodeIdsByStoreQuery = $this->queryContainer
+            ->queryCategoryNodeByIds($categoryNodeIds)
+            ->filterByFkStore($currentStore->getIdStore());
+        $categoryNodeIdsByStore = $categoryNodeIdsByStoreQuery->find()->getColumnValues('idCategoryNode');
+
+        return $categoryNodeIdsByStore;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param string $localeName
+     * @param \Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage|null $spyCategoryNodeStorageEntity
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function storeDataSet(
+        CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
+        $localeName,
+        ?SpyCategoryNodeStorage $spyCategoryNodeStorageEntity = null
+    ): void
+    {
+        if ($spyCategoryNodeStorageEntity === null) {
+            $spyCategoryNodeStorageEntity = new SpyCategoryNodeStorage();
+        }
+
+        if (!$categoryNodeStorageTransfer->getIsActive()) {
+            if (!$spyCategoryNodeStorageEntity->isNew()) {
+                $spyCategoryNodeStorageEntity->delete();
+            }
+
+            return;
+        }
+
+        $storeName = $this->storeFacade->getCurrentStore()->getName();
+        $categoryNodeNodeData = $this->utilSanitize->arrayFilterRecursive($categoryNodeStorageTransfer->toArray());
+        $spyCategoryNodeStorageEntity->setFkCategoryNode($categoryNodeStorageTransfer->getNodeId());
+        $spyCategoryNodeStorageEntity->setData($categoryNodeNodeData);
+        $spyCategoryNodeStorageEntity->setLocale($localeName);
+        $spyCategoryNodeStorageEntity->setIsSendingToQueue($this->isSendingToQueue);
+        $spyCategoryNodeStorageEntity->setStore($storeName);
+        $spyCategoryNodeStorageEntity->save();
     }
 }
