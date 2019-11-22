@@ -15,7 +15,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     /**
      * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
      */
-    private $storeFacade;
+    protected $storeFacade;
 
     /**
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
@@ -92,21 +92,13 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
             $spyCategoryNodeStorageEntity = new SpyCategoryNodeStorage();
         }
 
-        if (!$categoryNodeStorageTransfer->getIsActive()) {
-            if (!$spyCategoryNodeStorageEntity->isNew()) {
-                $spyCategoryNodeStorageEntity->delete();
-            }
-
-            return;
-        }
-
         $storeName = $this->storeFacade->getCurrentStore()->getName();
-        $categoryNodeNodeData = $this->utilSanitize->arrayFilterRecursive($categoryNodeStorageTransfer->toArray());
-        $spyCategoryNodeStorageEntity->setFkCategoryNode($categoryNodeStorageTransfer->getNodeId());
-        $spyCategoryNodeStorageEntity->setData($categoryNodeNodeData);
-        $spyCategoryNodeStorageEntity->setLocale($localeName);
-        $spyCategoryNodeStorageEntity->setIsSendingToQueue($this->isSendingToQueue);
         $spyCategoryNodeStorageEntity->setStore($storeName);
-        $spyCategoryNodeStorageEntity->save();
+
+        parent::storeDataSet(
+            $categoryNodeStorageTransfer,
+            $localeName,
+            $spyCategoryNodeStorageEntity
+        );
     }
 }
