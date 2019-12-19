@@ -3,7 +3,6 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\EntityExpander;
 
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
-use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
@@ -12,19 +11,6 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  */
 class StoreEntityExpanderPlugin extends AbstractPlugin implements EntityExpanderPluginInterface
 {
-    /**
-     * @var \Spryker\Shared\Kernel\Store $store
-     */
-    protected $store;
-
-    /**
-     * @param \Spryker\Shared\Kernel\Store $store
-     */
-    public function __construct(Store $store)
-    {
-        $this->store = $store;
-    }
-
     /**
      * @param \Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage $categoryNodeStorageEntity
      *
