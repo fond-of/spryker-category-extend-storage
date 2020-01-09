@@ -18,6 +18,7 @@ class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDepe
     {
         $container = parent::provideBusinessLayerDependencies($container);
         $container = $this->addStoreFacade($container);
+        $container = $this->addStoragePluginExpander($container);
 
         return $container;
     }
@@ -34,5 +35,28 @@ class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDepe
         };
 
         return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addStoragePluginExpander(Container $container): Container
+    {
+        $container[static::PLUGIN_STORAGE_EXPANDER] = function () {
+            return $this->createStoragePluginExpander();
+        };
+        return $container;
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[]
+     */
+    protected function createStoragePluginExpander(): array
+    {
+        return [
+            new CategoryKeyStorageMapperExpanderPlugin(),
+        ];
     }
 }

@@ -45,14 +45,6 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\EntityExpander\EntityExpanderPluginInterface[]
-     */
-    public function getEntityExpanderPlugins(): array
-    {
-        return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::PLUGIN_ENTITY_EXPANDER);
-    }
-
-    /**
      * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface[]
      */
     public function getStorageMapperExpanderPlugins(): array
