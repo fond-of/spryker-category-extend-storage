@@ -2,12 +2,15 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage;
 
+use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\CategoryKeyStorageMapperExpanderPlugin;
 use Spryker\Zed\CategoryStorage\CategoryStorageDependencyProvider as SprykerCategoryStorageDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
 class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDependencyProvider
 {
     public const FACADE_STORE = 'FACADE_STORE';
+
+    public const PLUGIN_STORAGE_EXPANDER = 'PLUGIN_STORAGE_EXPANDER';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
