@@ -6,7 +6,6 @@ use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendS
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
 use Spryker\Shared\Kernel\Store;
-use Spryker\Zed\Category\Business\Model\CategoryTree\CategoryTree;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
 use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
@@ -26,7 +25,8 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
             $this->getUtilSanitizeService(),
             $this->getStore(),
             $this->getConfig()->isSendingToQueue(),
-            $this->getStoreFacade()
+            $this->getStoreFacade(),
+            $this->getStorageMapperExpanderPlugins()
         );
     }
 
