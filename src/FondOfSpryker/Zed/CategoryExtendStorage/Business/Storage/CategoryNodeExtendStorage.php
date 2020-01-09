@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
+use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
@@ -18,21 +19,29 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     protected $storeFacade;
 
     /**
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface
+     */
+    protected $storageMapperExpanderPlugins;
+
+    /**
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
      * @param $isSendingToQueue
      * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
+     * @param array $storageMapperExpanderPlugins
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
         $isSendingToQueue,
-        StoreFacadeInterface $storeFacade
+        StoreFacadeInterface $storeFacade,
+        array $storageMapperExpanderPlugins
     ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);
         $this->storeFacade = $storeFacade;
+        $this->storageMapperExpanderPlugins = $storageMapperExpanderPlugins;
     }
 
     /**
@@ -80,14 +89,14 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
      * @param string $localeName
      * @param \Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage|null $spyCategoryNodeStorageEntity
-     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return void
      */
     protected function storeDataSet(
         CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
         $localeName,
         ?SpyCategoryNodeStorage $spyCategoryNodeStorageEntity = null
-    ): void
-    {
+    ): void {
         if ($spyCategoryNodeStorageEntity === null) {
             $spyCategoryNodeStorageEntity = new SpyCategoryNodeStorage();
         }
@@ -100,5 +109,14 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
             $localeName,
             $spyCategoryNodeStorageEntity
         );
+    }
+
+    protected function mapToCategoryNodeStorageTransfer(array $categoryNodes, SpyCategoryNode $categoryNode, $includeChildren = true, $includeParents = true): CategoryNodeStorageTransfer
+    {
+        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
+        foreach ($this->storageMapperExpanderPlugins as $plugin) {
+            $plugin->expand($categoryNodeStorageTransfer, $categoryNode);
+        }
+        return $categoryNodeStorageTransfer;
     }
 }
