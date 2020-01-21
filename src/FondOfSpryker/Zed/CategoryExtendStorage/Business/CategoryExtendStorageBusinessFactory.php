@@ -3,9 +3,11 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business;
 
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage;
+use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
+use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
@@ -16,24 +18,30 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     /**
      * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage|\Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
      */
-    public function createCategoryNodeStorage()
+    public function createCategoryNodeStorage(): CategoryNodeExtendStorage
     {
         return new CategoryNodeExtendStorage(
             $this->getQueryContainer(),
             $this->getUtilSanitizeService(),
             $this->getStore(),
             $this->getConfig()->isSendingToQueue(),
-            $this->getEntityExpanderPlugins(),
+            $this->getStoreFacade(),
             $this->getStorageMapperExpanderPlugins()
         );
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\EntityExpander\EntityExpanderPluginInterface[]
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage
      */
-    public function getEntityExpanderPlugins(): array
+    public function createCategoryTreeStorage(): CategoryTreeExtendStorage
     {
-        return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::PLUGIN_ENTITY_EXPANDER);
+        return new CategoryTreeExtendStorage(
+            $this->getQueryContainer(),
+            $this->getUtilSanitizeService(),
+            $this->getStore(),
+            $this->getConfig()->isSendingToQueue(),
+            $this->getStoreFacade()
+        );
     }
 
     /**
@@ -50,5 +58,15 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     public function getStore(): Store
     {
         return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::STORE);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
+     */
+    protected function getStoreFacade(): StoreFacadeInterface
+    {
+        return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::FACADE_STORE);
     }
 }
