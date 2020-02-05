@@ -24,6 +24,9 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
      */
     protected $spyCategory;
     
+    /**
+     * @return void
+     */
     protected function _before()
     {
         $this->categoryNodeStorageTransfer = $this->getMockBuilder(CategoryNodeStorageTransfer::class)
@@ -42,6 +45,9 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
             ->getMock();
     }
 
+    /**
+     * @return void
+     */
     public function testExpandSuccess()
     {
         $this->spyCategory->fromArray(['categoryKey' => 'TEST_KEY'], true);

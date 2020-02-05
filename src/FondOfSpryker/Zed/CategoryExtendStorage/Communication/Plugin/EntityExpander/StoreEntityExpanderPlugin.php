@@ -8,6 +8,8 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\Business\CategoryExtendStorageFacade getFacade()
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\Communication\CategoryExtendStorageCommunicationFactory getFactory()
+ * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
+ * @method \FondOfSpryker\Zed\CategoryExtendStorage\Persistence\CategoryExtendStorageQueryContainerInterface getQueryContainer()
  */
 class StoreEntityExpanderPlugin extends AbstractPlugin implements EntityExpanderPluginInterface
 {
@@ -18,6 +20,6 @@ class StoreEntityExpanderPlugin extends AbstractPlugin implements EntityExpander
      */
     public function expand(SpyCategoryNodeStorage $categoryNodeStorageEntity): void
     {
-        $categoryNodeStorageEntity->setStore($this->store->getStoreName());
+        $categoryNodeStorageEntity->setStore($this->getFactory()->getStoreFacade()->getCurrentStore()->getName());
     }
 }

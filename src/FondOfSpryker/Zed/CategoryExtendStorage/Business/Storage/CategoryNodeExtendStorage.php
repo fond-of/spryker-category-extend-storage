@@ -19,7 +19,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     protected $storeFacade;
 
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[]
      */
     protected $storageMapperExpanderPlugins;
 
@@ -27,15 +27,15 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
-     * @param $isSendingToQueue
+     * @param bool $isSendingToQueue
      * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
-     * @param array $storageMapperExpanderPlugins
+     * @param array|\FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[] $storageMapperExpanderPlugins
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
-        $isSendingToQueue,
+        bool $isSendingToQueue,
         StoreFacadeInterface $storeFacade,
         array $storageMapperExpanderPlugins
     ) {
@@ -72,7 +72,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     }
 
     /**
-     * @return void
+     * @return array
      */
     protected function reduceCategoryNodeIdsByStore(array $categoryNodeIds): array
     {
@@ -111,12 +111,20 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
         );
     }
 
+    /**
+     * @param  array  $categoryNodes
+     * @param  \Orm\Zed\Category\Persistence\SpyCategoryNode  $categoryNode
+     * @param  bool  $includeChildren
+     * @param  bool  $includeParents
+     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
+     */
     protected function mapToCategoryNodeStorageTransfer(array $categoryNodes, SpyCategoryNode $categoryNode, $includeChildren = true, $includeParents = true): CategoryNodeStorageTransfer
     {
         $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
         foreach ($this->storageMapperExpanderPlugins as $plugin) {
             $plugin->expand($categoryNodeStorageTransfer, $categoryNode);
         }
+
         return $categoryNodeStorageTransfer;
     }
 }

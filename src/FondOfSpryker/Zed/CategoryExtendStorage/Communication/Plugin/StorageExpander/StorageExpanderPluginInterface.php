@@ -8,10 +8,8 @@ use Orm\Zed\Category\Persistence\SpyCategoryNode;
 interface StorageExpanderPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\SpyCategoryNode $categoryNode
-     *
-     * @return void
+     * @param  \Generated\Shared\Transfer\CategoryNodeStorageTransfer  $categoryNodeStorageTransfer
+     * @param  \Orm\Zed\Category\Persistence\SpyCategoryNode  $categoryNode
      */
     public function expand(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, SpyCategoryNode $categoryNode): void;
 }

@@ -16,20 +16,19 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
     protected $storeFacade;
 
     /**
-     * CategoryTreeExtendStorage constructor.
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
-     * @param $isSendingToQueue
+     * @param bool $isSendingToQueue
      * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
-        $isSendingToQueue,
+        bool $isSendingToQueue,
         StoreFacadeInterface $storeFacade
-    ){
+    ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);
         $this->storeFacade = $storeFacade;
     }

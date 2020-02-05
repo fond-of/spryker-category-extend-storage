@@ -18,6 +18,9 @@ class StoreEntityExpanderPluginTest extends Unit
      */
     protected $categoryNodeStorageEntityMock;
 
+    /**
+     * @return void
+     */
     protected function _before()
     {
         $this->storeMock = $this->getMockBuilder(Store::class)
@@ -31,6 +34,9 @@ class StoreEntityExpanderPluginTest extends Unit
             ->getMock();
     }
 
+    /**
+     * @return void
+     */
     public function testExpandSuccess()
     {
         $this->categoryNodeStorageEntityMock->expects($this->atLeastOnce())

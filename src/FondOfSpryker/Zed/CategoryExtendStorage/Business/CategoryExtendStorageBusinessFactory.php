@@ -5,8 +5,10 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Business;
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
+use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
+use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface;
 use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
@@ -16,9 +18,9 @@ use Spryker\Zed\Store\Business\StoreFacadeInterface;
 class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusinessFactory
 {
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage|\Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
+     * @return \Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
      */
-    public function createCategoryNodeStorage(): CategoryNodeExtendStorage
+    public function createCategoryNodeStorage(): CategoryNodeStorageInterface
     {
         return new CategoryNodeExtendStorage(
             $this->getQueryContainer(),
@@ -45,7 +47,7 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface[]
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[]
      */
     public function getStorageMapperExpanderPlugins(): array
     {
@@ -61,8 +63,6 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
      */
     protected function getStoreFacade(): StoreFacadeInterface
