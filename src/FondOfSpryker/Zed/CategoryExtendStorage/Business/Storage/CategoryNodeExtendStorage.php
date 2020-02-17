@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
@@ -9,12 +10,11 @@ use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
     /**
-     * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface 
      */
     protected $storeFacade;
 
@@ -28,7 +28,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
      * @param bool $isSendingToQueue
-     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
+     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface $storeFacade
      * @param array|\FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[] $storageMapperExpanderPlugins
      */
     public function __construct(
@@ -36,7 +36,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
         bool $isSendingToQueue,
-        StoreFacadeInterface $storeFacade,
+        CategoryExtendStorageToStoreFacadeInterface $storeFacade,
         array $storageMapperExpanderPlugins
     ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);

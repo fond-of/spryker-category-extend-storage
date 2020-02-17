@@ -3,8 +3,8 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication;
 
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Spryker\Zed\CategoryStorage\Communication\CategoryStorageCommunicationFactory as SprykerCategoryStorageCommunicationFactory;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
@@ -13,10 +13,10 @@ use Spryker\Zed\Store\Business\StoreFacadeInterface;
 class CategoryExtendStorageCommunicationFactory extends SprykerCategoryStorageCommunicationFactory
 {
     /**
-     * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
-    public function getStoreFacade(): StoreFacadeInterface
+    public function getStoreFacade(): CategoryExtendStorageToStoreFacadeInterface
     {
         return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::FACADE_STORE);
     }

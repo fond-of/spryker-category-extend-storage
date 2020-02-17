@@ -6,10 +6,10 @@ use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendS
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface;
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
@@ -63,9 +63,10 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
-    protected function getStoreFacade(): StoreFacadeInterface
+    protected function getStoreFacade(): CategoryExtendStorageToStoreFacadeInterface
     {
         return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::FACADE_STORE);
     }
