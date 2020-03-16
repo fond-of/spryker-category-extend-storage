@@ -14,7 +14,6 @@ class CategoryExtendStorageCommunicationFactory extends SprykerCategoryStorageCo
 {
     /**
      * @return \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getStoreFacade(): CategoryExtendStorageToStoreFacadeInterface
     {

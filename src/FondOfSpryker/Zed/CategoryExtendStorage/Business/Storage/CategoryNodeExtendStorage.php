@@ -14,7 +14,7 @@ use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterfa
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface 
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
     protected $storeFacade;
 
@@ -29,7 +29,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      * @param \Spryker\Shared\Kernel\Store $store
      * @param bool $isSendingToQueue
      * @param \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface $storeFacade
-     * @param array|\FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[] $storageMapperExpanderPlugins
+     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[] $storageMapperExpanderPlugins
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
@@ -112,10 +112,11 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     }
 
     /**
-     * @param  array  $categoryNodes
-     * @param  \Orm\Zed\Category\Persistence\SpyCategoryNode  $categoryNode
-     * @param  bool  $includeChildren
-     * @param  bool  $includeParents
+     * @param array $categoryNodes
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param bool $includeChildren
+     * @param bool $includeParents
+     *
      * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
      */
     protected function mapToCategoryNodeStorageTransfer(array $categoryNodes, SpyCategoryNode $categoryNode, $includeChildren = true, $includeParents = true): CategoryNodeStorageTransfer

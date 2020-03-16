@@ -15,9 +15,10 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class CategoryKeyStorageMapperExpanderPlugin extends AbstractPlugin implements StorageExpanderPluginInterface
 {
     /**
-     * @param  \Generated\Shared\Transfer\CategoryNodeStorageTransfer  $categoryNodeStorageTransfer
-     * @param  \Orm\Zed\Category\Persistence\SpyCategoryNode  $categoryNode
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     *
+     * @return void
      */
     public function expand(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, SpyCategoryNode $categoryNode): void
     {

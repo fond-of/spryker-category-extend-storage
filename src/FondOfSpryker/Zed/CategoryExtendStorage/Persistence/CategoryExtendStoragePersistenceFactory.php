@@ -2,8 +2,6 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Persistence;
 
-use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
-use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStoragePersistenceFactory as SprykerCategoryStoragePersistenceFactory;
 
 /**

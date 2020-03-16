@@ -5,8 +5,6 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\CategoryKeyStorageMapperExpanderPlugin;
 use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeBridge;
 use Spryker\Zed\CategoryStorage\CategoryStorageDependencyProvider as SprykerCategoryStorageDependencyProvider;
-use Spryker\Zed\CategoryStorage\Dependency\QueryContainer\CategoryStorageToCategoryQueryContainerBridge;
-use Spryker\Zed\CategoryStorage\Dependency\QueryContainer\CategoryStorageToLocaleQueryContainerBridge;
 use Spryker\Zed\Kernel\Container;
 
 class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDependencyProvider
