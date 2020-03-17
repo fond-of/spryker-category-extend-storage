@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Subscriber;
 
+use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryExtendNodeCategoryAttributeStorageListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryNodeExtendStorageListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryNodeStorageCategoryStorageListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryTreeExtendStorageListener;
@@ -251,5 +252,35 @@ class CategoryExtendStorageEventSubscriber extends SprykerCategoryStorageEventSu
     protected function addCategoryDeleteListener(EventCollectionInterface $eventCollection)
     {
         $eventCollection->addListenerQueued(CategoryEvents::ENTITY_SPY_CATEGORY_DELETE, new CategoryNodeStorageCategoryStorageListener());
+    }
+
+    /**
+     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
+     *
+     * @return void
+     */
+    protected function addCategoryAttributeUpdateListener(EventCollectionInterface $eventCollection)
+    {
+        $eventCollection->addListenerQueued(CategoryEvents::ENTITY_SPY_CATEGORY_ATTRIBUTE_UPDATE, new CategoryExtendNodeCategoryAttributeStorageListener());
+    }
+
+    /**
+     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
+     *
+     * @return void
+     */
+    protected function addCategoryAttributeCreateListener(EventCollectionInterface $eventCollection)
+    {
+        $eventCollection->addListenerQueued(CategoryEvents::ENTITY_SPY_CATEGORY_ATTRIBUTE_CREATE, new CategoryExtendNodeCategoryAttributeStorageListener());
+    }
+
+    /**
+     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
+     *
+     * @return void
+     */
+    protected function addCategoryAttributeDeleteListener(EventCollectionInterface $eventCollection)
+    {
+        $eventCollection->addListenerQueued(CategoryEvents::ENTITY_SPY_CATEGORY_ATTRIBUTE_DELETE, new CategoryExtendNodeCategoryAttributeStorageListener());
     }
 }
