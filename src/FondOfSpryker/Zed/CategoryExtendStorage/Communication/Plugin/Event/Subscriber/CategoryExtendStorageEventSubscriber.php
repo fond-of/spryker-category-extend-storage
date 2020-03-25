@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Subscriber;
 
-use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryExtendNodeCategoryAttributeStoragePublishListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryExtendNodeCategoryTemplateStoragePublishListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryExtendNodeStorageParentPublishListener;
 use FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\Event\Listener\CategoryExtendNodeStoragePublishListener;

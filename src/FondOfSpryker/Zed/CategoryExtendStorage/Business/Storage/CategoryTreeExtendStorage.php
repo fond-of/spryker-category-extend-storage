@@ -4,6 +4,7 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
 use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryTreeStorage;
+use Generated\Shared\Transfer\CategoryTreeStorageTransfer;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryTreeStorage as SprykerCategoryTreeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
@@ -99,4 +100,20 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
         $spyCategoryTreeStorage->setStore($this->storeFacade->getCurrentStore()->getName());
         parent::storeDataSet($categoryNodeStorageTransfers, $localeName, $spyCategoryTreeStorage);
     }
+
+    /**
+     * @return string[]
+     */
+    protected function getSharedPersistenceLocaleNames(): array
+    {
+        $localeNames = $this->store->getLocales();
+        foreach ($this->store->getStoresWithSharedPersistence() as $storeName) {
+            foreach ($this->store->getLocalesPerStore($storeName) as $localeName) {
+                $localeNames[] = $localeName;
+            }
+        }
+
+        return array_unique($localeNames);
+    }
+
 }
