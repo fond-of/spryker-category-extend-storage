@@ -12,5 +12,4 @@ use Spryker\Zed\CategoryStorage\Communication\Plugin\Event\Listener\CategoryNode
  */
 class CategoryExtendNodeCategoryAttributeStorageListener extends CategoryNodeCategoryAttributeStorageListener
 {
-
 }

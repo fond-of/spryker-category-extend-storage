@@ -4,7 +4,6 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
 use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryTreeStorage;
-use Generated\Shared\Transfer\CategoryTreeStorageTransfer;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryTreeStorage as SprykerCategoryTreeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
@@ -54,15 +53,21 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
     /**
      * @return array
      */
-    protected function getCategoryTrees()
+    protected function getCategoryTrees(): array
     {
         $currentStoreId = $this->storeFacade->getCurrentStore()->getIdStore();
         $localeNames = $this->getSharedPersistenceLocaleNames();
-        $locales = $this->queryContainer->queryLocalesWithLocaleNames($localeNames)->find();
+        $locales = $this->queryContainer
+            ->queryLocalesWithLocaleNames($localeNames)
+            ->find();
 
-        $rootCategory = $this->queryContainer->queryCategoryRoot()->findOne();
+        $rootCategory = $this->queryContainer
+            ->queryCategoryRoot()
+            ->findOneByFkStore($currentStoreId);
+
         $categoryNodeTree = [];
         $this->disableInstancePooling();
+
         foreach ($locales as $locale) {
             $categoryNodes = $this->queryContainer->queryCategoryNodeTree($locale->getIdLocale())->filterByFkStore($currentStoreId)->find()->getData();
             $categoryNodeTree[$locale->getLocaleName()] = $this->getChildren(
@@ -115,5 +120,4 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
 
         return array_unique($localeNames);
     }
-
 }
