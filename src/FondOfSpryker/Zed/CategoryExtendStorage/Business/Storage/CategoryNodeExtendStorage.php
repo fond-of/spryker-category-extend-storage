@@ -125,9 +125,13 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
         $includeChildren = true,
         $includeParents = true
     ): CategoryNodeStorageTransfer {
-        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
+        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer(
+            $categoryNodes,
+            $categoryNode,
+            $includeChildren,
+            $includeParents
+        );
 
-        /** @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface $storageExpanderPlugin */
         foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
             $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode);
         }
