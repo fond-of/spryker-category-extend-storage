@@ -125,9 +125,15 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
         $includeChildren = true,
         $includeParents = true
     ): CategoryNodeStorageTransfer {
-        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
-        foreach ($this->storageMapperExpanderPlugins as $plugin) {
-            $plugin->expand($categoryNodeStorageTransfer, $categoryNode);
+        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer(
+            $categoryNodes,
+            $categoryNode,
+            $includeChildren,
+            $includeParents
+        );
+
+        foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
+            $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode);
         }
 
         return $categoryNodeStorageTransfer;
