@@ -9,9 +9,9 @@ use Orm\Zed\Category\Persistence\SpyCategoryNode;
 class ContentTypeStorageMapperExpanderPlugin implements StorageExpanderPluginInterface
 {
     /**
-     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param SpyCategoryNode $categoryNode
-     * @param SpyCategoryAttribute|null $categoryAttribute
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryAttribute|null $categoryAttribute
      *
      * @return void
      */
@@ -19,8 +19,7 @@ class ContentTypeStorageMapperExpanderPlugin implements StorageExpanderPluginInt
         CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
         SpyCategoryNode $categoryNode,
         ?SpyCategoryAttribute $categoryAttribute
-    ): void
-    {
+    ): void {
         $categoryNodeStorageTransfer->setContentType($categoryNode->getCategory()->getContentType());
     }
 }

@@ -9,7 +9,7 @@ use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Shared\Config\Config;
 
-class AltTitleStorageMapperExpanderPluginTest  extends Unit
+class AltTitleStorageMapperExpanderPluginTest extends Unit
 {
     /**
      * @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer|\PHPUnit\Framework\MockObject\MockObject

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander;
 
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
@@ -17,9 +16,9 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class AltTitleStorageMapperExpanderPlugin extends AbstractPlugin implements StorageExpanderPluginInterface
 {
     /**
-     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param SpyCategoryNode $categoryNode
-     * @param SpyCategoryAttribute|null $categoryAttribute
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryAttribute|null $categoryAttribute
      *
      * @return void
      */
@@ -27,8 +26,7 @@ class AltTitleStorageMapperExpanderPlugin extends AbstractPlugin implements Stor
         CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
         SpyCategoryNode $categoryNode,
         ?SpyCategoryAttribute $categoryAttribute
-    ): void
-    {
+    ): void {
         $categoryNodeStorageTransfer->setAltTitle($categoryAttribute->getAltTitle());
     }
 }

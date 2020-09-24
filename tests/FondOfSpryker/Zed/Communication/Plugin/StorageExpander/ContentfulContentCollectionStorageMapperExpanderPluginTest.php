@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander;
 
 use Codeception\Test\Unit;
@@ -101,5 +100,5 @@ class ContentfulContentCollectionStorageMapperExpanderPluginTest extends Unit
             $this->spyCategoryNodeMock,
             $this->spyCategoryAttributeMock
         );
-   }
+    }
 }

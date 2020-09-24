@@ -16,9 +16,9 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class ContentfulHeroStorageMapperExpanderPlugin extends AbstractPlugin implements StorageExpanderPluginInterface
 {
     /**
-     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param SpyCategoryNode $categoryNode
-     * @param SpyCategoryAttribute|null $categoryAttribute
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryAttribute|null $categoryAttribute
      *
      * @return void
      */
@@ -26,8 +26,7 @@ class ContentfulHeroStorageMapperExpanderPlugin extends AbstractPlugin implement
         CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
         SpyCategoryNode $categoryNode,
         ?SpyCategoryAttribute $categoryAttribute
-    ): void
-    {
+    ): void {
         $categoryNodeStorageTransfer->setContentfulHero($categoryNode->getCategory()->getContentfulHero());
     }
 }
