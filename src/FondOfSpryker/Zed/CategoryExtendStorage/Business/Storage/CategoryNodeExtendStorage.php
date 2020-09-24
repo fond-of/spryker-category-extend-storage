@@ -132,8 +132,11 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
             $includeParents
         );
 
+        /** @var \Orm\Zed\Category\Persistence\SpyCategoryAttribute $attribute */
+        $attribute = $categoryNode->getCategory()->getAttributes()->getFirst();
+
         foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
-            $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode);
+            $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode, $attribute);
         }
 
         return $categoryNodeStorageTransfer;

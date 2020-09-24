@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander;
 
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
+use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
@@ -15,12 +16,17 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class ContentfulContentCollectionStorageMapperExpanderPlugin extends AbstractPlugin implements StorageExpanderPluginInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
-     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param CategoryNodeStorageTransfer $categoryNodeStorageTransfer
+     * @param SpyCategoryNode $categoryNode
+     * @param SpyCategoryAttribute|null $categoryAttribute
      *
      * @return void
      */
-    public function expand(CategoryNodeStorageTransfer $categoryNodeStorageTransfer, SpyCategoryNode $categoryNode): void
+    public function expand(
+        CategoryNodeStorageTransfer $categoryNodeStorageTransfer,
+        SpyCategoryNode $categoryNode,
+        ?SpyCategoryAttribute $categoryAttribute
+    ): void
     {
         $categoryNodeStorageTransfer->setContentfulContentCollection($categoryNode->getCategory()->getContentfulContentCollection());
     }

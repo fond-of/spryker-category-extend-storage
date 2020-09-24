@@ -5,12 +5,11 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageEx
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use org\bovigo\vfs\vfsStream;
-use Orm\Zed\Category\Persistence\SpyCategory;
 use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Shared\Config\Config;
 
-class CategoryKeyStorageMapperExpanderPluginTest extends Unit
+class AltTitleStorageMapperExpanderPluginTest  extends Unit
 {
     /**
      * @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -23,14 +22,14 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
     protected $spyCategoryNodeMock;
 
     /**
-     * @var \Orm\Zed\Category\Persistence\SpyCategory|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $spyCategoryMock;
-
-    /**
      * @var \Orm\Zed\Category\Persistence\SpyCategoryAttribute|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $spyCategoryAttributeMock;
+
+    /**
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\AltTitleStorageMapperExpanderPlugin
+     */
+    protected $altTitleStorageMapperExpanderPlugin;
 
     /**
      * @return void
@@ -48,22 +47,19 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
 
         $this->categoryNodeStorageTransferMock = $this->getMockBuilder(CategoryNodeStorageTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setCategoryKey'])
+            ->setMethods(['setAltTitle'])
             ->getMock();
 
         $this->spyCategoryNodeMock = $this->getMockBuilder(SpyCategoryNode::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getCategory'])
-            ->getMock();
-
-        $this->spyCategoryMock = $this->getMockBuilder(SpyCategory::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getCategoryKey', 'fromArray'])
             ->getMock();
 
         $this->spyCategoryAttributeMock = $this->getMockBuilder(SpyCategoryAttribute::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getAltTitle'])
             ->getMock();
+
+        $this->altTitleStorageMapperExpanderPlugin = new AltTitleStorageMapperExpanderPlugin();
     }
 
     /**
@@ -76,24 +72,14 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
         file_put_contents($fileUrl, $newFileContent);
         Config::getInstance()->init();
 
-        $this->spyCategoryMock->fromArray(['categoryKey' => 'TEST_KEY'], true);
+        $this->categoryNodeStorageTransferMock->expects($this->once())
+            ->method('setAltTitle');
 
-        $this->categoryNodeStorageTransferMock->expects($this->atLeastOnce())
-            ->method('setCategoryKey')
-            ->willReturnSelf();
+        $this->spyCategoryAttributeMock->expects($this->once())
+            ->method('getAltTitle')
+            ->willReturn('alt_title');
 
-        $this->spyCategoryNodeMock->expects($this->atLeastOnce())
-            ->method('getCategory')
-            ->willReturn($this->spyCategoryMock);
-
-        $this->spyCategoryMock->expects($this->atLeastOnce())
-            ->method('getCategoryKey')
-            ->willReturn('TEST_KEY');
-
-        $this->assertEquals('TEST_KEY', $this->spyCategoryMock->getCategoryKey());
-
-        $categoryKeyStorageMapperExpanderPlugin = new CategoryKeyStorageMapperExpanderPlugin();
-        $categoryKeyStorageMapperExpanderPlugin->expand(
+        $this->altTitleStorageMapperExpanderPlugin->expand(
             $this->categoryNodeStorageTransferMock,
             $this->spyCategoryNodeMock,
             $this->spyCategoryAttributeMock
