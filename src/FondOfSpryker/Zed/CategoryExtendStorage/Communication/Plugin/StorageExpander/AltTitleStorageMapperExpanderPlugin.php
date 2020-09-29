@@ -27,6 +27,10 @@ class AltTitleStorageMapperExpanderPlugin extends AbstractPlugin implements Stor
         SpyCategoryNode $categoryNode,
         ?SpyCategoryAttribute $categoryAttribute
     ): void {
+        if ($categoryAttribute === null || $categoryAttribute->getAltTitle() === null) {
+            return;
+        }
+
         $categoryNodeStorageTransfer->setAltTitle($categoryAttribute->getAltTitle());
     }
 }
