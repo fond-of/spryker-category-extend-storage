@@ -8,12 +8,15 @@ use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
 use Propel\Runtime\Exception\PropelException;
 use Spryker\Shared\Kernel\Store;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
 
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
+    use LoggerTrait;
+
     /**
      * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
@@ -140,10 +143,10 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
             foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
                 $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode, $attribute);
             }
-
-            return $categoryNodeStorageTransfer;
         } catch (PropelException $e) {
-            return $categoryNodeStorageTransfer;
+            $this->getLogger()->info('SpyCategoryNode without category or attributes');
         }
+
+        return $categoryNodeStorageTransfer;
     }
 }
