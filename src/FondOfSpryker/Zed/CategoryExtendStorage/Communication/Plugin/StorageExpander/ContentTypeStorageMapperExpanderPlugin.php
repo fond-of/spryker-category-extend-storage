@@ -5,15 +5,8 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageEx
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
-use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
-/**
- * @method \FondOfSpryker\Zed\CategoryExtendStorage\Business\CategoryExtendStorageFacade getFacade()
- * @method \FondOfSpryker\Zed\CategoryExtendStorage\Communication\CategoryExtendStorageCommunicationFactory getFactory()
- * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
- * @method \FondOfSpryker\Zed\CategoryExtendStorage\Persistence\CategoryExtendStorageQueryContainerInterface getQueryContainer()
- */
-class CategoryKeyStorageMapperExpanderPlugin extends AbstractPlugin implements StorageExpanderPluginInterface
+class ContentTypeStorageMapperExpanderPlugin implements StorageExpanderPluginInterface
 {
     /**
      * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer $categoryNodeStorageTransfer
@@ -27,6 +20,6 @@ class CategoryKeyStorageMapperExpanderPlugin extends AbstractPlugin implements S
         SpyCategoryNode $categoryNode,
         ?SpyCategoryAttribute $categoryAttribute
     ): void {
-        $categoryNodeStorageTransfer->setCategoryKey($categoryNode->getCategory()->getCategoryKey());
+        $categoryNodeStorageTransfer->setContentType($categoryNode->getCategory()->getContentType());
     }
 }

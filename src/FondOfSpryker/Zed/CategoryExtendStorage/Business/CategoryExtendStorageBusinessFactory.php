@@ -5,9 +5,10 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Business;
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryTreeExtendStorage;
 use FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageDependencyProvider;
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\CategoryStorageBusinessFactory as SprykerCategoryStorageBusinessFactory;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
+use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface;
 
 /**
  * @method \FondOfSpryker\Zed\CategoryExtendStorage\CategoryExtendStorageConfig getConfig()
@@ -16,9 +17,9 @@ use Spryker\Zed\Store\Business\StoreFacadeInterface;
 class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusinessFactory
 {
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage\CategoryNodeExtendStorage|\Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
+     * @return \Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorageInterface
      */
-    public function createCategoryNodeStorage(): CategoryNodeExtendStorage
+    public function createCategoryNodeStorage(): CategoryNodeStorageInterface
     {
         return new CategoryNodeExtendStorage(
             $this->getQueryContainer(),
@@ -45,7 +46,7 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface[]
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[]
      */
     public function getStorageMapperExpanderPlugins(): array
     {
@@ -61,11 +62,9 @@ class CategoryExtendStorageBusinessFactory extends SprykerCategoryStorageBusines
     }
 
     /**
-     * @throws
-     *
-     * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @return \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
-    protected function getStoreFacade(): StoreFacadeInterface
+    protected function getStoreFacade(): CategoryExtendStorageToStoreFacadeInterface
     {
         return $this->getProvidedDependency(CategoryExtendStorageDependencyProvider::FACADE_STORE);
     }

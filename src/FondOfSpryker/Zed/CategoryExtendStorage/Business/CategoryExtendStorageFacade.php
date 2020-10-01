@@ -10,7 +10,7 @@ use Spryker\Zed\CategoryStorage\Business\CategoryStorageFacade as SprykerCategor
 class CategoryExtendStorageFacade extends SprykerCategoryStorageFacade
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @api
      *
@@ -24,7 +24,7 @@ class CategoryExtendStorageFacade extends SprykerCategoryStorageFacade
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @api
      *

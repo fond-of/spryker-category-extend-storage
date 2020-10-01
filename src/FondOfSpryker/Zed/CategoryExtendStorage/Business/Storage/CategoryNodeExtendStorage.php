@@ -2,24 +2,28 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
+use Propel\Runtime\Exception\PropelException;
 use Spryker\Shared\Kernel\Store;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
+    use LoggerTrait;
+
     /**
-     * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
     protected $storeFacade;
 
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Business\Plugin\StorageExpander\StorageExpanderPluginInterface
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[]
      */
     protected $storageMapperExpanderPlugins;
 
@@ -27,16 +31,16 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
-     * @param $isSendingToQueue
-     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
-     * @param array $storageMapperExpanderPlugins
+     * @param bool $isSendingToQueue
+     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface $storeFacade
+     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\StorageExpanderPluginInterface[] $storageMapperExpanderPlugins
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
-        $isSendingToQueue,
-        StoreFacadeInterface $storeFacade,
+        bool $isSendingToQueue,
+        CategoryExtendStorageToStoreFacadeInterface $storeFacade,
         array $storageMapperExpanderPlugins
     ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);
@@ -72,7 +76,7 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
     }
 
     /**
-     * @return void
+     * @return array
      */
     protected function reduceCategoryNodeIdsByStore(array $categoryNodeIds): array
     {
@@ -111,12 +115,38 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
         );
     }
 
-    protected function mapToCategoryNodeStorageTransfer(array $categoryNodes, SpyCategoryNode $categoryNode, $includeChildren = true, $includeParents = true): CategoryNodeStorageTransfer
-    {
-        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer($categoryNodes, $categoryNode, $includeChildren, $includeParents);
-        foreach ($this->storageMapperExpanderPlugins as $plugin) {
-            $plugin->expand($categoryNodeStorageTransfer, $categoryNode);
+    /**
+     * @param array $categoryNodes
+     * @param \Orm\Zed\Category\Persistence\SpyCategoryNode $categoryNode
+     * @param bool $includeChildren
+     * @param bool $includeParents
+     *
+     * @return \Generated\Shared\Transfer\CategoryNodeStorageTransfer
+     */
+    protected function mapToCategoryNodeStorageTransfer(
+        array $categoryNodes,
+        SpyCategoryNode $categoryNode,
+        $includeChildren = true,
+        $includeParents = true
+    ): CategoryNodeStorageTransfer {
+        $categoryNodeStorageTransfer = parent::mapToCategoryNodeStorageTransfer(
+            $categoryNodes,
+            $categoryNode,
+            $includeChildren,
+            $includeParents
+        );
+
+        try {
+            /** @var \Orm\Zed\Category\Persistence\SpyCategoryAttribute $attribute */
+            $attribute = $categoryNode->getCategory()->getAttributes()->getFirst();
+
+            foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
+                $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode, $attribute);
+            }
+        } catch (PropelException $e) {
+            $this->getLogger()->info('SpyCategoryNode without category or attributes');
         }
+
         return $categoryNodeStorageTransfer;
     }
 }

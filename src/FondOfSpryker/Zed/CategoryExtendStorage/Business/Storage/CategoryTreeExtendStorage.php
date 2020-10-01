@@ -2,36 +2,34 @@
 
 namespace FondOfSpryker\Zed\CategoryExtendStorage\Business\Storage;
 
-use Generated\Shared\Transfer\CategoryTreeStorageTransfer;
+use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryTreeStorage;
 use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryTreeStorage as SprykerCategoryTreeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
 {
     /**
-     * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
     protected $storeFacade;
 
     /**
-     * CategoryTreeExtendStorage constructor.
      * @param \Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface $queryContainer
      * @param \Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface $utilSanitize
      * @param \Spryker\Shared\Kernel\Store $store
-     * @param $isSendingToQueue
-     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
+     * @param bool $isSendingToQueue
+     * @param \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface $storeFacade
      */
     public function __construct(
         CategoryStorageQueryContainerInterface $queryContainer,
         CategoryStorageToUtilSanitizeServiceInterface $utilSanitize,
         Store $store,
-        $isSendingToQueue,
-        StoreFacadeInterface $storeFacade
-    ){
+        bool $isSendingToQueue,
+        CategoryExtendStorageToStoreFacadeInterface $storeFacade
+    ) {
         parent::__construct($queryContainer, $utilSanitize, $store, $isSendingToQueue);
         $this->storeFacade = $storeFacade;
     }
@@ -55,19 +53,27 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
     /**
      * @return array
      */
-    protected function getCategoryTrees()
+    protected function getCategoryTrees(): array
     {
         $currentStoreId = $this->storeFacade->getCurrentStore()->getIdStore();
         $localeNames = $this->getSharedPersistenceLocaleNames();
-        $locales = $this->queryContainer->queryLocalesWithLocaleNames($localeNames)->find();
+        $locales = $this->queryContainer
+            ->queryLocalesWithLocaleNames($localeNames)
+            ->find();
 
-        $rootCategory = $this->queryContainer->queryCategoryRoot()->filterByFkStore($currentStoreId)->findOne();
+        $rootCategory = $this->queryContainer
+            ->queryCategoryRoot()
+            ->findOneByFkStore($currentStoreId);
+
         $categoryNodeTree = [];
         $this->disableInstancePooling();
+
         foreach ($locales as $locale) {
             $categoryNodes = $this->queryContainer->queryCategoryNodeTree($locale->getIdLocale())->filterByFkStore($currentStoreId)->find()->getData();
-            $categoryNodeTree[$locale->getLocaleName()] = $this->getChildren($rootCategory->getIdCategoryNode(),
-                $categoryNodes);
+            $categoryNodeTree[$locale->getLocaleName()] = $this->getChildren(
+                $rootCategory->getIdCategoryNode(),
+                $categoryNodes
+            );
         }
         $this->enableInstancePooling();
 
@@ -81,9 +87,9 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\CategoryNodeStorageTransfer[]  $categoryNodeStorageTransfers
-     * @param  string  $localeName
-     * @param  \Orm\Zed\CategoryStorage\Persistence\SpyCategoryTreeStorage|null  $spyCategoryTreeStorage
+     * @param \Generated\Shared\Transfer\CategoryNodeStorageTransfer[] $categoryNodeStorageTransfers
+     * @param string $localeName
+     * @param \Orm\Zed\CategoryStorage\Persistence\SpyCategoryTreeStorage|null $spyCategoryTreeStorage
      *
      * @return void
      */
@@ -114,5 +120,4 @@ class CategoryTreeExtendStorage extends SprykerCategoryTreeStorage
 
         return array_unique($localeNames);
     }
-
 }
