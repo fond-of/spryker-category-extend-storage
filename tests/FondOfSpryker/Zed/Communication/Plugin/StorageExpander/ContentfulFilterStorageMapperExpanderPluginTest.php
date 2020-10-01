@@ -10,7 +10,7 @@ use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Shared\Config\Config;
 
-class CategoryKeyStorageMapperExpanderPluginTest extends Unit
+class ContentfulFilterStorageMapperExpanderPluginTest extends Unit
 {
     /**
      * @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -33,6 +33,11 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
     protected $spyCategoryAttributeMock;
 
     /**
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\ContentfulFilterStorageMapperExpanderPlugin
+     */
+    protected $contentfulFilterStorageMapperExpanderPlugin;
+
+    /**
      * @return void
      */
     protected function _before()
@@ -48,7 +53,7 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
 
         $this->categoryNodeStorageTransferMock = $this->getMockBuilder(CategoryNodeStorageTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setCategoryKey'])
+            ->setMethods(['setContentfulFilter'])
             ->getMock();
 
         $this->spyCategoryNodeMock = $this->getMockBuilder(SpyCategoryNode::class)
@@ -58,12 +63,14 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
 
         $this->spyCategoryMock = $this->getMockBuilder(SpyCategory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getCategoryKey', 'fromArray'])
+            ->setMethods(['getContentfulFilter'])
             ->getMock();
 
         $this->spyCategoryAttributeMock = $this->getMockBuilder(SpyCategoryAttribute::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->contentfulFilterStorageMapperExpanderPlugin = new ContentfulFilterStorageMapperExpanderPlugin();
     }
 
     /**
@@ -76,24 +83,19 @@ class CategoryKeyStorageMapperExpanderPluginTest extends Unit
         file_put_contents($fileUrl, $newFileContent);
         Config::getInstance()->init();
 
-        $this->spyCategoryMock->fromArray(['categoryKey' => 'TEST_KEY'], true);
-
-        $this->categoryNodeStorageTransferMock->expects($this->atLeastOnce())
-            ->method('setCategoryKey')
+        $this->categoryNodeStorageTransferMock->expects($this->once())
+            ->method('setContentfulFilter')
             ->willReturnSelf();
 
-        $this->spyCategoryNodeMock->expects($this->atLeastOnce())
+        $this->spyCategoryNodeMock->expects($this->once())
             ->method('getCategory')
             ->willReturn($this->spyCategoryMock);
 
-        $this->spyCategoryMock->expects($this->atLeastOnce())
-            ->method('getCategoryKey')
-            ->willReturn('TEST_KEY');
+        $this->spyCategoryMock->expects($this->once())
+            ->method('getContentfulFilter')
+            ->willReturn('CONTENTFUL_ID');
 
-        $this->assertEquals('TEST_KEY', $this->spyCategoryMock->getCategoryKey());
-
-        $categoryKeyStorageMapperExpanderPlugin = new CategoryKeyStorageMapperExpanderPlugin();
-        $categoryKeyStorageMapperExpanderPlugin->expand(
+        $this->contentfulFilterStorageMapperExpanderPlugin->expand(
             $this->categoryNodeStorageTransferMock,
             $this->spyCategoryNodeMock,
             $this->spyCategoryAttributeMock

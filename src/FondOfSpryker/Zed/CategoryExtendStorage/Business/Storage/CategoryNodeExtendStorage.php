@@ -6,13 +6,17 @@ use FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStor
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Orm\Zed\CategoryStorage\Persistence\SpyCategoryNodeStorage;
+use Propel\Runtime\Exception\PropelException;
 use Spryker\Shared\Kernel\Store;
+use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\CategoryStorage\Business\Storage\CategoryNodeStorage as SprykerCategoryNodeStorage;
 use Spryker\Zed\CategoryStorage\Dependency\Service\CategoryStorageToUtilSanitizeServiceInterface;
 use Spryker\Zed\CategoryStorage\Persistence\CategoryStorageQueryContainerInterface;
 
 class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
 {
+    use LoggerTrait;
+
     /**
      * @var \FondOfSpryker\Zed\CategoryExtendStorage\Dependency\Facade\CategoryExtendStorageToStoreFacadeInterface
      */
@@ -132,8 +136,15 @@ class CategoryNodeExtendStorage extends SprykerCategoryNodeStorage
             $includeParents
         );
 
-        foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
-            $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode);
+        try {
+            /** @var \Orm\Zed\Category\Persistence\SpyCategoryAttribute $attribute */
+            $attribute = $categoryNode->getCategory()->getAttributes()->getFirst();
+
+            foreach ($this->storageMapperExpanderPlugins as $storageExpanderPlugin) {
+                $storageExpanderPlugin->expand($categoryNodeStorageTransfer, $categoryNode, $attribute);
+            }
+        } catch (PropelException $e) {
+            $this->getLogger()->info('SpyCategoryNode without category or attributes');
         }
 
         return $categoryNodeStorageTransfer;
