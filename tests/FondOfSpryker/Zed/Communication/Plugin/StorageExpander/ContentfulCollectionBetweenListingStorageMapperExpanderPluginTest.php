@@ -5,11 +5,12 @@ namespace FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageEx
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\CategoryNodeStorageTransfer;
 use org\bovigo\vfs\vfsStream;
+use Orm\Zed\Category\Persistence\SpyCategory;
 use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Shared\Config\Config;
 
-class AltTitleStorageMapperExpanderPluginTest extends Unit
+class ContentfulCollectionBetweenListingStorageMapperExpanderPluginTest extends Unit
 {
     /**
      * @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -22,14 +23,19 @@ class AltTitleStorageMapperExpanderPluginTest extends Unit
     protected $spyCategoryNodeMock;
 
     /**
+     * @var \Orm\Zed\Category\Persistence\SpyCategory|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $spyCategoryMock;
+
+    /**
      * @var \Orm\Zed\Category\Persistence\SpyCategoryAttribute|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $spyCategoryAttributeMock;
 
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\AltTitleStorageMapperExpanderPlugin
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\ContentfulCollectionBetweenListingStorageMapperExpanderPlugin
      */
-    protected $altTitleStorageMapperExpanderPlugin;
+    protected $contentfulCollectionBetweenListingStorageMapperExpanderPlugin;
 
     /**
      * @return void
@@ -47,19 +53,24 @@ class AltTitleStorageMapperExpanderPluginTest extends Unit
 
         $this->categoryNodeStorageTransferMock = $this->getMockBuilder(CategoryNodeStorageTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setAltTitle'])
+            ->setMethods(['setContentfulCollectionBetweenListing'])
             ->getMock();
 
         $this->spyCategoryNodeMock = $this->getMockBuilder(SpyCategoryNode::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getCategory'])
+            ->getMock();
+
+        $this->spyCategoryMock = $this->getMockBuilder(SpyCategory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getContentfulCollectionBetweenListing'])
             ->getMock();
 
         $this->spyCategoryAttributeMock = $this->getMockBuilder(SpyCategoryAttribute::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAltTitle'])
             ->getMock();
 
-        $this->altTitleStorageMapperExpanderPlugin = new AltTitleStorageMapperExpanderPlugin();
+        $this->contentfulCollectionBetweenListingStorageMapperExpanderPlugin = new ContentfulCollectionBetweenListingStorageMapperExpanderPlugin();
     }
 
     /**
@@ -73,13 +84,18 @@ class AltTitleStorageMapperExpanderPluginTest extends Unit
         Config::getInstance()->init();
 
         $this->categoryNodeStorageTransferMock->expects($this->once())
-            ->method('setAltTitle');
+            ->method('setContentfulCollectionBetweenListing')
+            ->willReturnSelf();
 
-        $this->spyCategoryAttributeMock->expects($this->atLeastOnce())
-            ->method('getAltTitle')
-            ->willReturn('alt_title');
+        $this->spyCategoryNodeMock->expects($this->once())
+            ->method('getCategory')
+            ->willReturn($this->spyCategoryMock);
 
-        $this->altTitleStorageMapperExpanderPlugin->expand(
+        $this->spyCategoryMock->expects($this->once())
+            ->method('getContentfulCollectionBetweenListing')
+            ->willReturn('CONTENTFUL_ID');
+
+        $this->contentfulCollectionBetweenListingStorageMapperExpanderPlugin->expand(
             $this->categoryNodeStorageTransferMock,
             $this->spyCategoryNodeMock,
             $this->spyCategoryAttributeMock
