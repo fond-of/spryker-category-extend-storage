@@ -5,6 +5,15 @@
 
     <transfer name="CategoryNodeStorage">
         <property name="categoryKey" type="string" />
+        <property name="altTitle" type="string" />
+        <property name="pageType" type="string" />
+        <property name="contentType" type="string" />
+        <property name="contentfulHero" type="string"/>
+        <property name="contentfulFilter" type="string"/>
+        <property name="contentfulContentCollection" type="string"/>
+        <property name="contentfulCollectionBeforeListing" type="string"/>
+        <property name="contentfulCollectionBetweenListing" type="string"/>
+        <property name="contentfulCollectionAfterListing" type="string"/>
     </transfer>
 </transfers>
 
