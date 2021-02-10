@@ -3,7 +3,21 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
 
+    <transfer name="Category">
+        <property name="bodyClass" type="string"/>
+        <property name="categoryKey" type="string" />
+        <property name="pageType" type="string"/>
+        <property name="contentType" type="string"/>
+        <property name="contentfulHero" type="string"/>
+        <property name="contentfulFilter" type="string"/>
+        <property name="contentfulContentCollection" type="string"/>
+        <property name="contentfulCollectionBeforeListing" type="string"/>
+        <property name="contentfulCollectionBetweenListing" type="string"/>
+        <property name="contentfulCollectionAfterListing" type="string"/>
+    </transfer>
+
     <transfer name="CategoryNodeStorage">
+        <property name="bodyClass" type="string" />
         <property name="categoryKey" type="string" />
         <property name="altTitle" type="string" />
         <property name="pageType" type="string" />
