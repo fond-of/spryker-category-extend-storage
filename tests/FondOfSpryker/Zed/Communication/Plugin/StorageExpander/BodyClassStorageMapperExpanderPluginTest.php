@@ -10,7 +10,7 @@ use Orm\Zed\Category\Persistence\SpyCategoryAttribute;
 use Orm\Zed\Category\Persistence\SpyCategoryNode;
 use Spryker\Shared\Config\Config;
 
-class PageTypeStorageMapperExpanderPluginTest extends Unit
+class BodyClassStorageMapperExpanderPluginTest extends Unit
 {
     /**
      * @var \Generated\Shared\Transfer\CategoryNodeStorageTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -33,9 +33,9 @@ class PageTypeStorageMapperExpanderPluginTest extends Unit
     protected $spyCategoryAttributeMock;
 
     /**
-     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\ContentfulFilterStorageMapperExpanderPlugin
+     * @var \FondOfSpryker\Zed\CategoryExtendStorage\Communication\Plugin\StorageExpander\BodyClassStorageMapperExpanderPlugin
      */
-    protected $contentfulFilterStorageMapperExpanderPlugin;
+    protected $bodyClassStorageExpanderPlugin;
 
     /**
      * @return void
@@ -53,7 +53,7 @@ class PageTypeStorageMapperExpanderPluginTest extends Unit
 
         $this->categoryNodeStorageTransferMock = $this->getMockBuilder(CategoryNodeStorageTransfer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['setContentfulFilter'])
+            ->setMethods(['setContentfulCollectionAfterListing'])
             ->getMock();
 
         $this->spyCategoryNodeMock = $this->getMockBuilder(SpyCategoryNode::class)
@@ -63,14 +63,14 @@ class PageTypeStorageMapperExpanderPluginTest extends Unit
 
         $this->spyCategoryMock = $this->getMockBuilder(SpyCategory::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getContentfulFilter'])
+            ->setMethods(['getContentfulCollectionAfterListing'])
             ->getMock();
 
         $this->spyCategoryAttributeMock = $this->getMockBuilder(SpyCategoryAttribute::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->contentfulFilterStorageMapperExpanderPlugin = new PageTypeStorageMapperExpanderPlugin();
+        $this->bodyClassStorageExpanderPlugin = new BodyClassStorageMapperExpanderPlugin();
     }
 
     /**
@@ -84,7 +84,7 @@ class PageTypeStorageMapperExpanderPluginTest extends Unit
         Config::getInstance()->init();
 
         $this->categoryNodeStorageTransferMock->expects($this->once())
-            ->method('setPageType')
+            ->method('setBodyClass')
             ->willReturnSelf();
 
         $this->spyCategoryNodeMock->expects($this->once())
@@ -92,10 +92,10 @@ class PageTypeStorageMapperExpanderPluginTest extends Unit
             ->willReturn($this->spyCategoryMock);
 
         $this->spyCategoryMock->expects($this->once())
-            ->method('getPageType')
-            ->willReturn('PageType');
+            ->method('getBodyClass')
+            ->willReturn('css_class');
 
-        $this->contentfulFilterStorageMapperExpanderPlugin->expand(
+        $this->bodyClassStorageExpanderPlugin->expand(
             $this->categoryNodeStorageTransferMock,
             $this->spyCategoryNodeMock,
             $this->spyCategoryAttributeMock
