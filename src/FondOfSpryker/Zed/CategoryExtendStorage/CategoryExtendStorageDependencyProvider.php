@@ -32,7 +32,7 @@ class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDepe
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideCommunicationLayerDependencies(Container $container)
+    public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
         $container = $this->addStoreFacade($container);
@@ -45,7 +45,7 @@ class CategoryExtendStorageDependencyProvider extends SprykerCategoryStorageDepe
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function providePersistenceLayerDependencies(Container $container)
+    public function providePersistenceLayerDependencies(Container $container): Container
     {
         $container = parent::providePersistenceLayerDependencies($container);
         $container = $this->addStoreFacade($container);
